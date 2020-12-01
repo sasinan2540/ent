@@ -35,6 +35,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			task.FieldTitle:       {Type: field.TypeString, Column: task.FieldTitle},
 			task.FieldDescription: {Type: field.TypeString, Column: task.FieldDescription},
 			task.FieldStatus:      {Type: field.TypeEnum, Column: task.FieldStatus},
+			task.FieldUUID:        {Type: field.TypeUUID, Column: task.FieldUUID},
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{

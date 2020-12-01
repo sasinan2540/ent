@@ -115,13 +115,15 @@ type predicateAdder interface {
 	}
 
 	{{ range $f := $n.Fields }}
-		{{ $type := $f.Type.Type.String }}
-		{{ $iface := print (pascal $type) "P" }}
-		{{ if $f.IsTime }}{{ $iface = "TimeP" }}{{ else if $f.IsBytes }}{{ $iface = "BytesP" }}{{ end }}
-		// Where{{ $f.StructField }} applies the entql {{ $type }} predicate on the {{ $f.Name }} field.
-		func (f *{{ $filter }}) Where{{ $f.StructField }}(p entql.{{ $iface }}) {
-			f.Where(p.Field({{ $n.Package }}.{{ $f.Constant }}))
-		}
+		{{ if and (not $f.IsUUID) (not $f.HasGoType) }}
+			{{ $type := $f.Type.Type.String }}
+			{{ $iface := print (pascal $type) "P" }}
+			{{ if $f.IsTime }}{{ $iface = "TimeP" }}{{ else if $f.IsBytes }}{{ $iface = "BytesP" }}{{ end }}
+			// Where{{ $f.StructField }} applies the entql {{ $type }} predicate on the {{ $f.Name }} field.
+			func (f *{{ $filter }}) Where{{ $f.StructField }}(p entql.{{ $iface }}) {
+				f.Where(p.Field({{ $n.Package }}.{{ $f.Constant }}))
+			}
+		{{ end }}
 	{{ end }}
 
     {{ range $e := $n.Edges }}
